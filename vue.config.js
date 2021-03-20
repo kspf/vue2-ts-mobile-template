@@ -1,4 +1,8 @@
-module.exports = {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pxtovw = require('postcss-px-to-viewport')
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const MockServe = require('./mock/index.js')
+const CONFIG = {
   publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
   css: {
     loaderOptions: {
@@ -9,7 +13,34 @@ module.exports = {
       // 在这种情况下，我们可以使用 `scss` 选项，对 `scss` 语法进行单独配置
       scss: {
         prependData: '@import "~@/styles/variables.scss";'
+      },
+      postcss: {
+        // 这里的选项会传递给 postcss-loader
+        plugins: [
+          // eslint-disable-next-line new-cap
+          new pxtovw({
+            unitToConvert: 'px',
+            viewportWidth: 750,
+            unitPrecision: 5,
+            propList: ['*'],
+            viewportUnit: 'vw',
+            fontViewportUnit: 'vw',
+            selectorBlackList: [],
+            minPixelValue: 1,
+            mediaQuery: false,
+            replace: true,
+            exclude: []
+          })
+        ]
       }
     }
-  }
+  },
+  devServer: {}
 }
+
+// 配置mock
+if (process.env.PROJECT_MODE === 'mock') {
+  CONFIG.devServer.before = MockServe
+}
+
+module.exports = CONFIG
