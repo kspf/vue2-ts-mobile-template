@@ -7,5 +7,10 @@ module.exports = {
     statusCode: 0,
     message: 'success',
     data: mewsList
+  },
+  'get|/refres_token': {
+    statusCode: 0,
+    message: 'success',
+    data: mewsList
   }
 }
